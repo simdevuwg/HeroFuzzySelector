@@ -354,6 +354,65 @@
                                         </div>
                                     </div>
                                 </div>
+                                
+                                <!-- Performance Statistics for hero -->
+                                <div class="mt-2">
+                                    <h6 class="border-bottom pb-1 mb-2">Performance Statistics</h6>
+                                    <div class="row g-2">
+                                        <div class="col-6 col-md-3">
+                                            <div class="d-flex flex-column align-items-center">
+                                                <small>Win Rate</small>
+                                                <div class="progress w-100" style="height: 6px;">
+                                                    <div class="progress-bar {{ 'bg-success' if recommendation.hero.win_rate > 50 else 'bg-warning' }}" 
+                                                         role="progressbar" style="width: {{ recommendation.hero.win_rate }}%" 
+                                                         aria-valuenow="{{ recommendation.hero.win_rate }}" aria-valuemin="0" aria-valuemax="100">
+                                                    </div>
+                                                </div>
+                                                <small class="text-center">{{ recommendation.hero.win_rate }}%</small>
+                                            </div>
+                                        </div>
+                                        <div class="col-6 col-md-3">
+                                            <div class="d-flex flex-column align-items-center">
+                                                <small>Profit Factor</small>
+                                                <div class="progress w-100" style="height: 6px;">
+                                                    <div class="progress-bar {{ 'bg-success' if recommendation.hero.profit_factor > 1 else 'bg-danger' }}" 
+                                                         role="progressbar" style="width: {{ (recommendation.hero.profit_factor / 2) * 100 }}%" 
+                                                         aria-valuenow="{{ recommendation.hero.profit_factor }}" aria-valuemin="0" aria-valuemax="2">
+                                                    </div>
+                                                </div>
+                                                <small class="text-center">{{ recommendation.hero.profit_factor }}</small>
+                                            </div>
+                                        </div>
+                                        <div class="col-6 col-md-3">
+                                            <div class="d-flex flex-column align-items-center">
+                                                <small>Max Drawdown</small>
+                                                <div class="progress w-100" style="height: 6px;">
+                                                    <div class="progress-bar {{ 'bg-success' if recommendation.hero.max_drawdown < 20 else 'bg-warning' if recommendation.hero.max_drawdown < 35 else 'bg-danger' }}" 
+                                                         role="progressbar" style="width: {{ recommendation.hero.max_drawdown }}%" 
+                                                         aria-valuenow="{{ recommendation.hero.max_drawdown }}" aria-valuemin="0" aria-valuemax="100">
+                                                    </div>
+                                                </div>
+                                                <small class="text-center">{{ recommendation.hero.max_drawdown }}%</small>
+                                            </div>
+                                        </div>
+                                        <div class="col-6 col-md-3">
+                                            <div class="d-flex flex-column align-items-center">
+                                                <small>Max Con. Loss</small>
+                                                <div class="progress w-100" style="height: 6px;">
+                                                    <div class="progress-bar {{ 'bg-success' if recommendation.hero.max_consecutive_loss < 3 else 'bg-warning' if recommendation.hero.max_consecutive_loss < 6 else 'bg-danger' }}" 
+                                                         role="progressbar" style="width: {{ recommendation.hero.max_consecutive_loss * 10 }}%" 
+                                                         aria-valuenow="{{ recommendation.hero.max_consecutive_loss }}" aria-valuemin="0" aria-valuemax="10">
+                                                    </div>
+                                                </div>
+                                                <small class="text-center">{{ recommendation.hero.max_consecutive_loss }}</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="mt-2 text-center">
+                                    <a href="/hero/{{ recommendation.hero.id }}" class="btn btn-sm btn-outline-primary">View Detailed Analysis</a>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -362,8 +421,15 @@
                 
                 <div class="row mt-4">
                     <div class="col-12">
-                        <h5>Comparison Chart</h5>
+                        <h5>Attribute Comparison</h5>
                         <canvas id="comparisonChart" width="800" height="400"></canvas>
+                    </div>
+                </div>
+                
+                <div class="row mt-4">
+                    <div class="col-12">
+                        <h5>Performance Statistics Comparison</h5>
+                        <canvas id="statsComparisonChart" width="800" height="400"></canvas>
                     </div>
                 </div>
             </div>
@@ -439,6 +505,69 @@
                 }
             }
         });
+        
+        // Statistics chart for single hero
+        const ctxStats = document.getElementById('statisticsChart').getContext('2d');
+        const statsChart = new Chart(ctxStats, {
+            type: 'bar',
+            data: {
+                labels: ['Win Rate (%)', 'Profit Factor', 'Max Drawdown (%)', 'Max Consecutive Loss'],
+                datasets: [{
+                    label: 'Performance Statistics',
+                    data: [
+                        {{ evaluation.statistics.win_rate }},
+                        {{ evaluation.statistics.profit_factor }},
+                        {{ evaluation.statistics.max_drawdown }},
+                        {{ evaluation.statistics.max_consecutive_loss }}
+                    ],
+                    backgroundColor: [
+                        'rgba(75, 192, 192, 0.7)',  // green for win rate
+                        'rgba(54, 162, 235, 0.7)',  // blue for profit factor
+                        'rgba(255, 99, 132, 0.7)',  // red for drawdown
+                        'rgba(255, 159, 64, 0.7)'   // orange for consecutive loss
+                    ],
+                    borderColor: [
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(255, 159, 64, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return value;
+                            }
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                const label = context.dataset.label || '';
+                                const value = context.raw;
+                                const dataIndex = context.dataIndex;
+                                
+                                if (dataIndex === 0) return `Win Rate: ${value}%`;
+                                if (dataIndex === 1) return `Profit Factor: ${value}`;
+                                if (dataIndex === 2) return `Max Drawdown: ${value}%`;
+                                if (dataIndex === 3) return `Max Consecutive Loss: ${value}`;
+                                return `${label}: ${value}`;
+                            }
+                        }
+                    }
+                }
+            }
+        });
         {% endif %}
         
         {% if recommendations %}
@@ -509,6 +638,73 @@
                                 }{% if not loop.last %}, {% endif %}{% endfor %}][index];
                                 
                                 return `Final Score: ${hero.score}/100\nSuitability: ${hero.suitability}/100\nPreference Match: ${hero.preference}/100`;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+        
+        // Statistics comparison chart for recommendations
+        const ctxStatsComparison = document.getElementById('statsComparisonChart').getContext('2d');
+        const statsComparisonChart = new Chart(ctxStatsComparison, {
+            type: 'bar',
+            data: {
+                labels: [{% for rec in recommendations %}'{{ rec.hero.name }}'{% if not loop.last %}, {% endif %}{% endfor %}],
+                datasets: [
+                    {
+                        label: 'Win Rate (%)',
+                        data: [{% for rec in recommendations %}{{ rec.hero.win_rate }}{% if not loop.last %}, {% endif %}{% endfor %}],
+                        backgroundColor: 'rgba(75, 192, 192, 0.7)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'Profit Factor',
+                        data: [{% for rec in recommendations %}{{ rec.hero.profit_factor }}{% if not loop.last %}, {% endif %}{% endfor %}],
+                        backgroundColor: 'rgba(54, 162, 235, 0.7)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'Max Drawdown (%)',
+                        data: [{% for rec in recommendations %}{{ rec.hero.max_drawdown }}{% if not loop.last %}, {% endif %}{% endfor %}],
+                        backgroundColor: 'rgba(255, 99, 132, 0.7)',
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'Max Consecutive Loss',
+                        data: [{% for rec in recommendations %}{{ rec.hero.max_consecutive_loss }}{% if not loop.last %}, {% endif %}{% endfor %}],
+                        backgroundColor: 'rgba(255, 159, 64, 0.7)',
+                        borderColor: 'rgba(255, 159, 64, 1)',
+                        borderWidth: 1
+                    }
+                ]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                },
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    tooltip: {
+                        callbacks: {
+                            afterBody: function(context) {
+                                const index = context[0].dataIndex;
+                                const hero = [{% for rec in recommendations %}{ 
+                                    name: '{{ rec.hero.name }}',
+                                    win_rate: {{ rec.hero.win_rate }},
+                                    profit_factor: {{ rec.hero.profit_factor }},
+                                    max_drawdown: {{ rec.hero.max_drawdown }},
+                                    max_consecutive_loss: {{ rec.hero.max_consecutive_loss }}
+                                }{% if not loop.last %}, {% endif %}{% endfor %}][index];
+                                
+                                return `Win Rate: ${hero.win_rate}%\nProfit Factor: ${hero.profit_factor}\nMax Drawdown: ${hero.max_drawdown}%\nMax Consecutive Loss: ${hero.max_consecutive_loss}`;
                             }
                         }
                     }
