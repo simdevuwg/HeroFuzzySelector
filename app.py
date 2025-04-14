@@ -2,15 +2,37 @@ import os
 import logging
 from flask import Flask, render_template, request, jsonify
 
-from hero_data import get_hero_by_id, get_heroes_by_role, get_all_heroes, get_all_roles
-from fuzzy_logic import evaluate_hero, get_hero_recommendations
-
 # Configure logging
 logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger(__name__)
 
 # Create Flask app
 app = Flask(__name__)
 app.secret_key = os.environ.get("SESSION_SECRET", "mlbb_fuzzy_secret")
+
+# Configure database
+app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DATABASE_URL")
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {
+    "pool_recycle": 300,
+    "pool_pre_ping": True,
+}
+
+# Debug the database URL
+logger.info(f"Database URL configured: {app.config['SQLALCHEMY_DATABASE_URI']}")
+
+# Import these after app config to avoid circular imports
+from database import db
+from models import Hero, HeroStrength, HeroWeakness, UserPreference
+from fuzzy_logic import evaluate_hero, get_hero_recommendations
+from hero_data import get_hero_by_id, get_heroes_by_role, get_all_heroes, get_all_roles
+
+# Initialize the app with extensions
+db.init_app(app)
+
+# Create database tables if they don't exist
+with app.app_context():
+    db.create_all()
 
 @app.route("/")
 def index():
