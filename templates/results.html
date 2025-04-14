@@ -143,6 +143,80 @@
                         </table>
                     </div>
                 </div>
+                
+                <div class="row mt-4">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header bg-info text-white">
+                                <h5 class="mb-0">Performance Statistics</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <canvas id="statisticsChart" width="400" height="250"></canvas>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Statistic</th>
+                                                    <th>Value</th>
+                                                    <th>Rating</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>
+                                                        <span data-bs-toggle="tooltip" title="Percentage of matches won">Win Rate</span>
+                                                    </td>
+                                                    <td>{{ evaluation.statistics.win_rate }}%</td>
+                                                    <td>
+                                                        <div class="progress">
+                                                            <div class="progress-bar {{ 'bg-success' if evaluation.statistics.win_rate > 50 else 'bg-warning' }}" role="progressbar" style="width: {{ evaluation.statistics.win_rate }}%" aria-valuenow="{{ evaluation.statistics.win_rate }}" aria-valuemin="0" aria-valuemax="100"></div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <span data-bs-toggle="tooltip" title="Ratio of value gained from wins versus value lost from defeats">Profit Factor</span>
+                                                    </td>
+                                                    <td>{{ evaluation.statistics.profit_factor }}</td>
+                                                    <td>
+                                                        <div class="progress">
+                                                            <div class="progress-bar {{ 'bg-success' if evaluation.statistics.profit_factor > 1 else 'bg-danger' }}" role="progressbar" style="width: {{ (evaluation.statistics.profit_factor / 2) * 100 }}%" aria-valuenow="{{ evaluation.statistics.profit_factor }}" aria-valuemin="0" aria-valuemax="2"></div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <span data-bs-toggle="tooltip" title="Maximum percentage drop in performance from peak to trough">Max Drawdown</span>
+                                                    </td>
+                                                    <td>{{ evaluation.statistics.max_drawdown }}%</td>
+                                                    <td>
+                                                        <div class="progress">
+                                                            <div class="progress-bar {{ 'bg-success' if evaluation.statistics.max_drawdown < 20 else 'bg-warning' if evaluation.statistics.max_drawdown < 35 else 'bg-danger' }}" role="progressbar" style="width: {{ evaluation.statistics.max_drawdown }}%" aria-valuenow="{{ evaluation.statistics.max_drawdown }}" aria-valuemin="0" aria-valuemax="100"></div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <span data-bs-toggle="tooltip" title="Maximum number of consecutive losses">Max Consecutive Loss</span>
+                                                    </td>
+                                                    <td>{{ evaluation.statistics.max_consecutive_loss }}</td>
+                                                    <td>
+                                                        <div class="progress">
+                                                            <div class="progress-bar {{ 'bg-success' if evaluation.statistics.max_consecutive_loss < 3 else 'bg-warning' if evaluation.statistics.max_consecutive_loss < 6 else 'bg-danger' }}" role="progressbar" style="width: {{ evaluation.statistics.max_consecutive_loss * 10 }}%" aria-valuenow="{{ evaluation.statistics.max_consecutive_loss }}" aria-valuemin="0" aria-valuemax="10"></div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
