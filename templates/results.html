@@ -1,0 +1,447 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12 mb-4">
+        <div class="d-flex justify-content-between">
+            <h2>Hero Evaluation Results</h2>
+            <a href="/" class="btn btn-primary">
+                <i class="fas fa-arrow-left me-2"></i>New Evaluation
+            </a>
+        </div>
+        <hr>
+    </div>
+    
+    {% if single_hero %}
+    <!-- Single Hero Evaluation -->
+    <div class="col-12">
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h3 class="card-title mb-0">{{ single_hero.name }} Evaluation</h3>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="text-center mb-4">
+                            <div class="hero-icon rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 120px; height: 120px; background-color: var(--bs-dark);">
+                                <i class="fas fa-user-circle fa-5x text-primary"></i>
+                            </div>
+                            <h4>{{ single_hero.name }}</h4>
+                            <span class="badge bg-secondary mb-2">{{ single_hero.role }}</span>
+                            <div class="mt-2">
+                                <h5 class="text-primary">Final Score: {{ evaluation.final_score }}/100</h5>
+                                <div class="progress">
+                                    <div class="progress-bar bg-primary" role="progressbar" style="width: {{ evaluation.final_score }}%" aria-valuenow="{{ evaluation.final_score }}" aria-valuemin="0" aria-valuemax="100"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h5>Evaluation Scores</h5>
+                                <table class="table">
+                                    <tbody>
+                                        <tr>
+                                            <td>Suitability Score:</td>
+                                            <td>{{ evaluation.suitability_score }}/100</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Preference Match:</td>
+                                            <td>{{ evaluation.preference_match }}/100</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Final Score:</td>
+                                            <td>{{ evaluation.final_score }}/100</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="col-md-6">
+                                <h5>Hero Description</h5>
+                                <p>{{ single_hero.description }}</p>
+                            </div>
+                        </div>
+                        
+                        <div class="row mt-3">
+                            <div class="col-md-6">
+                                <h5>Strengths</h5>
+                                <ul>
+                                    {% for strength in evaluation.strengths %}
+                                    <li>{{ strength }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                            <div class="col-md-6">
+                                <h5>Weaknesses</h5>
+                                <ul>
+                                    {% for weakness in evaluation.weaknesses %}
+                                    <li>{{ weakness }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row mt-4">
+                    <div class="col-md-8">
+                        <h5>Attribute Breakdown</h5>
+                        <canvas id="attributeRadarChart" width="400" height="250"></canvas>
+                    </div>
+                    <div class="col-md-4">
+                        <h5>Attribute Details</h5>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Attribute</th>
+                                    <th>Rating</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Damage</td>
+                                    <td>
+                                        <div class="progress">
+                                            <div class="progress-bar bg-danger" role="progressbar" style="width: {{ evaluation.attributes.damage * 10 }}%" aria-valuenow="{{ evaluation.attributes.damage }}" aria-valuemin="0" aria-valuemax="10">{{ evaluation.attributes.damage }}/10</div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Durability</td>
+                                    <td>
+                                        <div class="progress">
+                                            <div class="progress-bar bg-success" role="progressbar" style="width: {{ evaluation.attributes.durability * 10 }}%" aria-valuenow="{{ evaluation.attributes.durability }}" aria-valuemin="0" aria-valuemax="10">{{ evaluation.attributes.durability }}/10</div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Crowd Control</td>
+                                    <td>
+                                        <div class="progress">
+                                            <div class="progress-bar bg-info" role="progressbar" style="width: {{ evaluation.attributes.crowd_control * 10 }}%" aria-valuenow="{{ evaluation.attributes.crowd_control }}" aria-valuemin="0" aria-valuemax="10">{{ evaluation.attributes.crowd_control }}/10</div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Mobility</td>
+                                    <td>
+                                        <div class="progress">
+                                            <div class="progress-bar bg-warning" role="progressbar" style="width: {{ evaluation.attributes.mobility * 10 }}%" aria-valuenow="{{ evaluation.attributes.mobility }}" aria-valuemin="0" aria-valuemax="10">{{ evaluation.attributes.mobility }}/10</div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Difficulty</td>
+                                    <td>
+                                        <div class="progress">
+                                            <div class="progress-bar bg-secondary" role="progressbar" style="width: {{ evaluation.attributes.difficulty * 10 }}%" aria-valuenow="{{ evaluation.attributes.difficulty }}" aria-valuemin="0" aria-valuemax="10">{{ evaluation.attributes.difficulty }}/10</div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    
+    {% if recommendations %}
+    <!-- Role-based Recommendations -->
+    <div class="col-12">
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h3 class="card-title mb-0">{{ role }} Hero Recommendations</h3>
+            </div>
+            <div class="card-body">
+                {% if preferences %}
+                <div class="mb-4">
+                    <h5>Your Preferences</h5>
+                    <div class="row">
+                        <div class="col-md-2">
+                            <p><strong>Damage:</strong> {{ preferences.damage }}/10</p>
+                        </div>
+                        <div class="col-md-2">
+                            <p><strong>Durability:</strong> {{ preferences.durability }}/10</p>
+                        </div>
+                        <div class="col-md-3">
+                            <p><strong>Crowd Control:</strong> {{ preferences.crowd_control }}/10</p>
+                        </div>
+                        <div class="col-md-2">
+                            <p><strong>Mobility:</strong> {{ preferences.mobility }}/10</p>
+                        </div>
+                        <div class="col-md-3">
+                            <p><strong>Difficulty Tolerance:</strong> {{ preferences.difficulty }}/10</p>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+                
+                <h5>Top {{ recommendations|length }} Heroes for {{ role }} Role</h5>
+                <div class="row">
+                    {% for recommendation in recommendations %}
+                    <div class="col-md-6 mb-4">
+                        <div class="card h-100">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0">{{ loop.index }}. {{ recommendation.hero.name }}</h5>
+                                <span class="badge bg-primary">Score: {{ recommendation.evaluation.final_score }}/100</span>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-5">
+                                        <div class="text-center mb-3">
+                                            <div class="hero-icon rounded-circle d-flex align-items-center justify-content-center mx-auto mb-2" style="width: 70px; height: 70px; background-color: var(--bs-dark);">
+                                                <i class="fas fa-user-circle fa-3x text-primary"></i>
+                                            </div>
+                                            <div class="progress mb-2">
+                                                <div class="progress-bar bg-primary" role="progressbar" style="width: {{ recommendation.evaluation.final_score }}%" aria-valuenow="{{ recommendation.evaluation.final_score }}" aria-valuemin="0" aria-valuemax="100"></div>
+                                            </div>
+                                            <div class="mt-2">
+                                                <small class="text-muted">Suitability: {{ recommendation.evaluation.suitability_score }}/100</small><br>
+                                                <small class="text-muted">Preference: {{ recommendation.evaluation.preference_match }}/100</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-7">
+                                        <p>{{ recommendation.hero.description }}</p>
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <strong>Strengths:</strong>
+                                                <ul class="small ps-3">
+                                                    {% for strength in recommendation.hero.strengths[:2] %}
+                                                    <li>{{ strength }}</li>
+                                                    {% endfor %}
+                                                </ul>
+                                            </div>
+                                            <div class="col-6">
+                                                <strong>Weaknesses:</strong>
+                                                <ul class="small ps-3">
+                                                    {% for weakness in recommendation.hero.weaknesses[:2] %}
+                                                    <li>{{ weakness }}</li>
+                                                    {% endfor %}
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="row mt-2">
+                                    <div class="col-12">
+                                        <div class="attribute-bars">
+                                            <div class="row g-1">
+                                                <div class="col-6">
+                                                    <div class="d-flex align-items-center">
+                                                        <small style="width: 100px">Damage:</small>
+                                                        <div class="progress flex-grow-1" style="height: 8px;">
+                                                            <div class="progress-bar bg-danger" role="progressbar" style="width: {{ recommendation.hero.damage * 10 }}%" aria-valuenow="{{ recommendation.hero.damage }}" aria-valuemin="0" aria-valuemax="10"></div>
+                                                        </div>
+                                                        <small class="ms-1">{{ recommendation.hero.damage }}</small>
+                                                    </div>
+                                                </div>
+                                                <div class="col-6">
+                                                    <div class="d-flex align-items-center">
+                                                        <small style="width: 100px">Durability:</small>
+                                                        <div class="progress flex-grow-1" style="height: 8px;">
+                                                            <div class="progress-bar bg-success" role="progressbar" style="width: {{ recommendation.hero.durability * 10 }}%" aria-valuenow="{{ recommendation.hero.durability }}" aria-valuemin="0" aria-valuemax="10"></div>
+                                                        </div>
+                                                        <small class="ms-1">{{ recommendation.hero.durability }}</small>
+                                                    </div>
+                                                </div>
+                                                <div class="col-6">
+                                                    <div class="d-flex align-items-center">
+                                                        <small style="width: 100px">CC:</small>
+                                                        <div class="progress flex-grow-1" style="height: 8px;">
+                                                            <div class="progress-bar bg-info" role="progressbar" style="width: {{ recommendation.hero.crowd_control * 10 }}%" aria-valuenow="{{ recommendation.hero.crowd_control }}" aria-valuemin="0" aria-valuemax="10"></div>
+                                                        </div>
+                                                        <small class="ms-1">{{ recommendation.hero.crowd_control }}</small>
+                                                    </div>
+                                                </div>
+                                                <div class="col-6">
+                                                    <div class="d-flex align-items-center">
+                                                        <small style="width: 100px">Mobility:</small>
+                                                        <div class="progress flex-grow-1" style="height: 8px;">
+                                                            <div class="progress-bar bg-warning" role="progressbar" style="width: {{ recommendation.hero.mobility * 10 }}%" aria-valuenow="{{ recommendation.hero.mobility }}" aria-valuemin="0" aria-valuemax="10"></div>
+                                                        </div>
+                                                        <small class="ms-1">{{ recommendation.hero.mobility }}</small>
+                                                    </div>
+                                                </div>
+                                                <div class="col-6">
+                                                    <div class="d-flex align-items-center">
+                                                        <small style="width: 100px">Difficulty:</small>
+                                                        <div class="progress flex-grow-1" style="height: 8px;">
+                                                            <div class="progress-bar bg-secondary" role="progressbar" style="width: {{ recommendation.hero.difficulty * 10 }}%" aria-valuenow="{{ recommendation.hero.difficulty }}" aria-valuemin="0" aria-valuemax="10"></div>
+                                                        </div>
+                                                        <small class="ms-1">{{ recommendation.hero.difficulty }}</small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                
+                <div class="row mt-4">
+                    <div class="col-12">
+                        <h5>Comparison Chart</h5>
+                        <canvas id="comparisonChart" width="800" height="400"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    
+    <div class="col-12 mt-3">
+        <div class="card">
+            <div class="card-header bg-info text-white">
+                <h4 class="mb-0">Fuzzy Logic Explanation</h4>
+            </div>
+            <div class="card-body">
+                <h5>How the Evaluation Works</h5>
+                <p>Our fuzzy logic system evaluates heroes based on the following process:</p>
+                <ol>
+                    <li><strong>Fuzzification:</strong> Converting exact numerical values (like damage = 7) into fuzzy values (like 'medium damage' and 'high damage' with certain degrees)</li>
+                    <li><strong>Rule Evaluation:</strong> Applying fuzzy rules like "If damage is high AND mobility is high THEN suitability is high"</li>
+                    <li><strong>Defuzzification:</strong> Converting the fuzzy output back to a numerical suitability score</li>
+                    <li><strong>Preference Matching:</strong> Comparing the hero's attributes to your stated preferences</li>
+                    <li><strong>Final Scoring:</strong> Combining suitability and preference match into a final recommendation score</li>
+                </ol>
+                
+                <h5>Interpreting the Results</h5>
+                <p>The final score represents how well a hero matches both the ideal for their role and your specific preferences. A higher score means a better match overall.</p>
+                <p>Keep in mind that every hero has strengths and weaknesses, and the "best" hero often depends on team composition and the specific match situation.</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        {% if single_hero %}
+        // Radar chart for single hero attributes
+        const ctxRadar = document.getElementById('attributeRadarChart').getContext('2d');
+        const attributeRadarChart = new Chart(ctxRadar, {
+            type: 'radar',
+            data: {
+                labels: ['Damage', 'Durability', 'Crowd Control', 'Mobility', 'Difficulty'],
+                datasets: [{
+                    label: '{{ single_hero.name }} Attributes',
+                    data: [
+                        {{ evaluation.attributes.damage }},
+                        {{ evaluation.attributes.durability }},
+                        {{ evaluation.attributes.crowd_control }},
+                        {{ evaluation.attributes.mobility }},
+                        {{ evaluation.attributes.difficulty }}
+                    ],
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 2,
+                    pointBackgroundColor: 'rgba(54, 162, 235, 1)',
+                    pointRadius: 4
+                }]
+            },
+            options: {
+                scales: {
+                    r: {
+                        angleLines: {
+                            display: true
+                        },
+                        suggestedMin: 0,
+                        suggestedMax: 10
+                    }
+                },
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    }
+                }
+            }
+        });
+        {% endif %}
+        
+        {% if recommendations %}
+        // Comparison chart for recommendations
+        const ctxComparison = document.getElementById('comparisonChart').getContext('2d');
+        const comparisonChart = new Chart(ctxComparison, {
+            type: 'bar',
+            data: {
+                labels: [{% for rec in recommendations %}'{{ rec.hero.name }}'{% if not loop.last %}, {% endif %}{% endfor %}],
+                datasets: [
+                    {
+                        label: 'Damage',
+                        data: [{% for rec in recommendations %}{{ rec.hero.damage }}{% if not loop.last %}, {% endif %}{% endfor %}],
+                        backgroundColor: 'rgba(255, 99, 132, 0.7)',
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'Durability',
+                        data: [{% for rec in recommendations %}{{ rec.hero.durability }}{% if not loop.last %}, {% endif %}{% endfor %}],
+                        backgroundColor: 'rgba(75, 192, 192, 0.7)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'Crowd Control',
+                        data: [{% for rec in recommendations %}{{ rec.hero.crowd_control }}{% if not loop.last %}, {% endif %}{% endfor %}],
+                        backgroundColor: 'rgba(54, 162, 235, 0.7)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'Mobility',
+                        data: [{% for rec in recommendations %}{{ rec.hero.mobility }}{% if not loop.last %}, {% endif %}{% endfor %}],
+                        backgroundColor: 'rgba(255, 206, 86, 0.7)',
+                        borderColor: 'rgba(255, 206, 86, 1)',
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'Difficulty',
+                        data: [{% for rec in recommendations %}{{ rec.hero.difficulty }}{% if not loop.last %}, {% endif %}{% endfor %}],
+                        backgroundColor: 'rgba(153, 102, 255, 0.7)',
+                        borderColor: 'rgba(153, 102, 255, 1)',
+                        borderWidth: 1
+                    }
+                ]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 10
+                    }
+                },
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    tooltip: {
+                        callbacks: {
+                            afterBody: function(context) {
+                                const index = context[0].dataIndex;
+                                const hero = [{% for rec in recommendations %}{ 
+                                    name: '{{ rec.hero.name }}',
+                                    score: {{ rec.evaluation.final_score }},
+                                    suitability: {{ rec.evaluation.suitability_score }},
+                                    preference: {{ rec.evaluation.preference_match }}
+                                }{% if not loop.last %}, {% endif %}{% endfor %}][index];
+                                
+                                return `Final Score: ${hero.score}/100\nSuitability: ${hero.suitability}/100\nPreference Match: ${hero.preference}/100`;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+        {% endif %}
+    });
+</script>
+{% endblock %}

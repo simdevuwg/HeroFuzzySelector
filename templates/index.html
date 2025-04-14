@@ -1,0 +1,311 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h3 class="card-title mb-0">
+                    <i class="fas fa-robot me-2"></i>MLBB Hero Selector - Fuzzy Logic System
+                </h3>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h4>Welcome to the MLBB Hero Selector</h4>
+                        <p>This system uses fuzzy logic to recommend Mobile Legends: Bang Bang heroes based on your preferences and role requirements.</p>
+                        <p>The system evaluates heroes on five key attributes:</p>
+                        <ul>
+                            <li><strong>Damage:</strong> Ability to deal damage to enemies</li>
+                            <li><strong>Durability:</strong> Ability to withstand damage</li>
+                            <li><strong>Crowd Control:</strong> Ability to control enemy movements and actions</li>
+                            <li><strong>Mobility:</strong> Movement speed and escape abilities</li>
+                            <li><strong>Difficulty:</strong> How hard the hero is to master</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card bg-dark">
+                            <div class="card-body">
+                                <h5 class="card-title">How It Works</h5>
+                                <p>Our system uses fuzzy logic to evaluate heroes based on multiple attributes and your preferences.</p>
+                                <ol>
+                                    <li>Set your preferences using the sliders below</li>
+                                    <li>Select a role or specific hero to evaluate</li>
+                                    <li>Get detailed recommendations with strengths and weaknesses</li>
+                                    <li>Compare hero attributes and suitability scores</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {% if error %}
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            {{ error }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endif %}
+
+        <div class="card">
+            <div class="card-header bg-secondary text-white">
+                <h4 class="mb-0">Hero Selection Form</h4>
+            </div>
+            <div class="card-body">
+                <form action="/evaluate" method="POST" id="heroForm">
+                    <!-- Attribute Preferences -->
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h5 class="mb-0">Set Your Preferences</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <!-- Damage Preference -->
+                                <div class="col-md-6 mb-3">
+                                    <label for="damage" class="form-label">Damage Importance (1-10)</label>
+                                    <div class="d-flex align-items-center">
+                                        <input type="range" class="form-range flex-grow-1" min="1" max="10" step="1" id="damage" name="damage" value="5">
+                                        <span class="ms-2 badge bg-primary" id="damageValue">5</span>
+                                    </div>
+                                </div>
+                                
+                                <!-- Durability Preference -->
+                                <div class="col-md-6 mb-3">
+                                    <label for="durability" class="form-label">Durability Importance (1-10)</label>
+                                    <div class="d-flex align-items-center">
+                                        <input type="range" class="form-range flex-grow-1" min="1" max="10" step="1" id="durability" name="durability" value="5">
+                                        <span class="ms-2 badge bg-primary" id="durabilityValue">5</span>
+                                    </div>
+                                </div>
+                                
+                                <!-- Crowd Control Preference -->
+                                <div class="col-md-6 mb-3">
+                                    <label for="crowd_control" class="form-label">Crowd Control Importance (1-10)</label>
+                                    <div class="d-flex align-items-center">
+                                        <input type="range" class="form-range flex-grow-1" min="1" max="10" step="1" id="crowd_control" name="crowd_control" value="5">
+                                        <span class="ms-2 badge bg-primary" id="ccValue">5</span>
+                                    </div>
+                                </div>
+                                
+                                <!-- Mobility Preference -->
+                                <div class="col-md-6 mb-3">
+                                    <label for="mobility" class="form-label">Mobility Importance (1-10)</label>
+                                    <div class="d-flex align-items-center">
+                                        <input type="range" class="form-range flex-grow-1" min="1" max="10" step="1" id="mobility" name="mobility" value="5">
+                                        <span class="ms-2 badge bg-primary" id="mobilityValue">5</span>
+                                    </div>
+                                </div>
+                                
+                                <!-- Difficulty Preference -->
+                                <div class="col-md-6 mb-3">
+                                    <label for="difficulty" class="form-label">Difficulty Tolerance (1-10)</label>
+                                    <div class="d-flex align-items-center">
+                                        <input type="range" class="form-range flex-grow-1" min="1" max="10" step="1" id="difficulty" name="difficulty" value="5">
+                                        <span class="ms-2 badge bg-primary" id="difficultyValue">5</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <!-- Role Selection -->
+                        <div class="col-md-6 mb-3">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="mb-0">Hero Role</h5>
+                                </div>
+                                <div class="card-body">
+                                    <select class="form-select" id="role" name="role">
+                                        <option value="">-- Select a Role --</option>
+                                        {% for role in roles %}
+                                        <option value="{{ role }}">{{ role }}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <div class="form-text">Select a role to get hero recommendations within that role.</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Hero Selection -->
+                        <div class="col-md-6 mb-3">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="mb-0">Specific Hero</h5>
+                                </div>
+                                <div class="card-body">
+                                    <select class="form-select" id="hero_id" name="hero_id">
+                                        <option value="">-- Select a Hero --</option>
+                                        {% for hero in heroes %}
+                                        <option value="{{ hero.id }}">{{ hero.name }} ({{ hero.role }})</option>
+                                        {% endfor %}
+                                    </select>
+                                    <div class="form-text">Alternatively, select a specific hero to evaluate.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="text-center mt-3">
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="fas fa-search me-2"></i>Evaluate Heroes
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-5" id="about">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header bg-info text-white">
+                <h4 class="mb-0">About Fuzzy Logic in Hero Selection</h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5>What is Fuzzy Logic?</h5>
+                        <p>Fuzzy logic is a form of many-valued logic that deals with reasoning that is approximate rather than fixed and exact. Unlike traditional binary logic (where variables may take on true or false values), fuzzy logic variables may have a truth value that ranges in degree between 0 and 1.</p>
+                        <p>In this application, we use fuzzy logic to evaluate hero attributes and match them to your preferences. This creates a more nuanced recommendation than a simple numerical comparison.</p>
+                    </div>
+                    <div class="col-md-6">
+                        <h5>How the Evaluation Works</h5>
+                        <p>Our system evaluates heroes based on:</p>
+                        <ul>
+                            <li><strong>Suitability Score:</strong> How well the hero's attributes match the ideal for their role</li>
+                            <li><strong>Preference Match:</strong> How closely the hero aligns with your stated preferences</li>
+                            <li><strong>Final Score:</strong> A weighted combination of suitability and preference match</li>
+                        </ul>
+                        <p>The system uses fuzzy inference rules to account for interdependencies between attributes (e.g., the combination of high damage and high mobility is particularly valuable for Assassins).</p>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <h5>MLBB Roles Explained</h5>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="card mb-3">
+                                <div class="card-header bg-secondary">
+                                    <h6 class="mb-0">Tank</h6>
+                                </div>
+                                <div class="card-body">
+                                    <p>Tanks absorb damage for the team and often initiate team fights. They excel in durability and crowd control.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card mb-3">
+                                <div class="card-header bg-secondary">
+                                    <h6 class="mb-0">Fighter</h6>
+                                </div>
+                                <div class="card-body">
+                                    <p>Fighters balance offense and defense. They can take and deal moderate damage, making them versatile heroes.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card mb-3">
+                                <div class="card-header bg-secondary">
+                                    <h6 class="mb-0">Assassin</h6>
+                                </div>
+                                <div class="card-body">
+                                    <p>Assassins specialize in quickly eliminating key targets. They have high burst damage and mobility but low durability.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card mb-3">
+                                <div class="card-header bg-secondary">
+                                    <h6 class="mb-0">Mage</h6>
+                                </div>
+                                <div class="card-body">
+                                    <p>Mages deal magical damage from a distance. They often have strong area-of-effect abilities and crowd control.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card mb-3">
+                                <div class="card-header bg-secondary">
+                                    <h6 class="mb-0">Marksman</h6>
+                                </div>
+                                <div class="card-body">
+                                    <p>Marksmen deal sustained physical damage from a distance. They are weak early but become very powerful late game.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card mb-3">
+                                <div class="card-header bg-secondary">
+                                    <h6 class="mb-0">Support</h6>
+                                </div>
+                                <div class="card-body">
+                                    <p>Supports help teammates with healing, shields, or utility effects. They excel at crowd control and team utility.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Update range input display values
+    document.addEventListener('DOMContentLoaded', function() {
+        const rangeInputs = ['damage', 'durability', 'crowd_control', 'mobility', 'difficulty'];
+        
+        rangeInputs.forEach(attribute => {
+            const input = document.getElementById(attribute);
+            const display = document.getElementById(attribute === 'crowd_control' ? 'ccValue' : `${attribute}Value`);
+            
+            input.addEventListener('input', function() {
+                display.textContent = this.value;
+            });
+        });
+        
+        // Handle role selection to filter heroes
+        const roleSelect = document.getElementById('role');
+        const heroSelect = document.getElementById('hero_id');
+        const allHeroes = Array.from(heroSelect.options).slice(1); // Skip the first placeholder option
+        
+        roleSelect.addEventListener('change', function() {
+            const selectedRole = this.value;
+            
+            // Clear hero selection when role changes
+            heroSelect.value = '';
+            
+            // Remove all existing hero options except the placeholder
+            while (heroSelect.options.length > 1) {
+                heroSelect.remove(1);
+            }
+            
+            // Add filtered heroes or all heroes
+            if (selectedRole) {
+                const filteredHeroes = allHeroes.filter(option => {
+                    return option.text.includes(`(${selectedRole})`);
+                });
+                
+                filteredHeroes.forEach(option => {
+                    heroSelect.add(option.cloneNode(true));
+                });
+            } else {
+                allHeroes.forEach(option => {
+                    heroSelect.add(option.cloneNode(true));
+                });
+            }
+        });
+        
+        // Clear role when specific hero is selected
+        heroSelect.addEventListener('change', function() {
+            if (this.value) {
+                roleSelect.value = '';
+            }
+        });
+    });
+</script>
+{% endblock %}
