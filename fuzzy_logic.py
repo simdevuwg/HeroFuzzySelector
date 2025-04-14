@@ -10,22 +10,45 @@ import logging
 def create_fuzzy_system():
     """Create and return the fuzzy control system for hero evaluation"""
     
-    # Input variables (attributes)
+    # Input variables (basic attributes)
     damage = ctrl.Antecedent(np.arange(0, 11, 1), 'damage')
     durability = ctrl.Antecedent(np.arange(0, 11, 1), 'durability')
     crowd_control = ctrl.Antecedent(np.arange(0, 11, 1), 'crowd_control')
     mobility = ctrl.Antecedent(np.arange(0, 11, 1), 'mobility')
     difficulty = ctrl.Antecedent(np.arange(0, 11, 1), 'difficulty')
     
+    # Input variables (statistical attributes)
+    win_rate = ctrl.Antecedent(np.arange(40, 61, 1), 'win_rate')
+    profit_factor = ctrl.Antecedent(np.arange(0.5, 2.1, 0.1), 'profit_factor')
+    max_drawdown = ctrl.Antecedent(np.arange(0, 51, 1), 'max_drawdown')
+    max_consecutive_loss = ctrl.Antecedent(np.arange(0, 11, 1), 'max_consecutive_loss')
+    
     # Output variable
     suitability = ctrl.Consequent(np.arange(0, 101, 1), 'suitability')
     
-    # Auto-generate fuzzy membership functions
+    # Auto-generate fuzzy membership functions for basic attributes
     damage.automf(3, names=['low', 'medium', 'high'])
     durability.automf(3, names=['low', 'medium', 'high'])
     crowd_control.automf(3, names=['low', 'medium', 'high'])
     mobility.automf(3, names=['low', 'medium', 'high'])
     difficulty.automf(3, names=['easy', 'medium', 'hard'])
+    
+    # Define membership functions for statistical attributes
+    win_rate['low'] = fuzz.trimf(win_rate.universe, [40, 45, 50])
+    win_rate['medium'] = fuzz.trimf(win_rate.universe, [45, 50, 55])
+    win_rate['high'] = fuzz.trimf(win_rate.universe, [50, 55, 60])
+    
+    profit_factor['poor'] = fuzz.trimf(profit_factor.universe, [0.5, 0.7, 0.9])
+    profit_factor['average'] = fuzz.trimf(profit_factor.universe, [0.8, 1.0, 1.2])
+    profit_factor['good'] = fuzz.trimf(profit_factor.universe, [1.1, 1.5, 2.0])
+    
+    max_drawdown['small'] = fuzz.trimf(max_drawdown.universe, [0, 15, 25])
+    max_drawdown['medium'] = fuzz.trimf(max_drawdown.universe, [20, 30, 40])
+    max_drawdown['large'] = fuzz.trimf(max_drawdown.universe, [35, 45, 50])
+    
+    max_consecutive_loss['few'] = fuzz.trimf(max_consecutive_loss.universe, [0, 2, 4])
+    max_consecutive_loss['moderate'] = fuzz.trimf(max_consecutive_loss.universe, [3, 5, 7])
+    max_consecutive_loss['many'] = fuzz.trimf(max_consecutive_loss.universe, [6, 8, 10])
     
     # Define membership functions for output
     suitability['low'] = fuzz.trimf(suitability.universe, [0, 0, 50])
@@ -73,11 +96,22 @@ def create_fuzzy_system():
     rule26 = ctrl.Rule(difficulty['easy'] & mobility['high'], suitability['high'])
     rule27 = ctrl.Rule(difficulty['medium'] & durability['medium'] & crowd_control['medium'], suitability['medium'])
     
+    # Define rules for statistical factors
+    rule28 = ctrl.Rule(win_rate['high'] & profit_factor['good'], suitability['high'])
+    rule29 = ctrl.Rule(win_rate['high'] & max_drawdown['small'], suitability['high'])
+    rule30 = ctrl.Rule(win_rate['medium'] & profit_factor['average'], suitability['medium'])
+    rule31 = ctrl.Rule(win_rate['low'] & max_drawdown['large'], suitability['low'])
+    rule32 = ctrl.Rule(profit_factor['good'] & max_consecutive_loss['few'], suitability['high'])
+    rule33 = ctrl.Rule(profit_factor['poor'] & max_consecutive_loss['many'], suitability['low'])
+    rule34 = ctrl.Rule(max_drawdown['small'] & max_consecutive_loss['few'], suitability['high'])
+    rule35 = ctrl.Rule(max_drawdown['large'] & max_consecutive_loss['many'], suitability['low'])
+    
     # Create control system
     hero_ctrl = ctrl.ControlSystem([
         rule1, rule2, rule3, rule4, rule5, rule6, rule7, rule8, rule9, rule10,
         rule11, rule12, rule13, rule14, rule15, rule16, rule17, rule18, rule19, rule20,
-        rule21, rule22, rule23, rule24, rule25, rule26, rule27
+        rule21, rule22, rule23, rule24, rule25, rule26, rule27, rule28, rule29, rule30,
+        rule31, rule32, rule33, rule34, rule35
     ])
     
     return ctrl.ControlSystemSimulation(hero_ctrl)
@@ -97,12 +131,18 @@ def evaluate_hero(hero, preferences):
         # Create fuzzy control system
         hero_eval = create_fuzzy_system()
         
-        # Set inputs
+        # Set inputs for basic attributes
         hero_eval.input['damage'] = hero["damage"]
         hero_eval.input['durability'] = hero["durability"]
         hero_eval.input['crowd_control'] = hero["crowd_control"]
         hero_eval.input['mobility'] = hero["mobility"]
         hero_eval.input['difficulty'] = hero["difficulty"]
+        
+        # Set inputs for statistical attributes
+        hero_eval.input['win_rate'] = hero["win_rate"]
+        hero_eval.input['profit_factor'] = hero["profit_factor"]
+        hero_eval.input['max_drawdown'] = hero["max_drawdown"]
+        hero_eval.input['max_consecutive_loss'] = hero["max_consecutive_loss"]
         
         # Compute result
         hero_eval.compute()
@@ -132,6 +172,12 @@ def evaluate_hero(hero, preferences):
                 "crowd_control": hero["crowd_control"],
                 "mobility": hero["mobility"],
                 "difficulty": hero["difficulty"]
+            },
+            "statistics": {
+                "win_rate": hero["win_rate"],
+                "profit_factor": hero["profit_factor"],
+                "max_drawdown": hero["max_drawdown"],
+                "max_consecutive_loss": hero["max_consecutive_loss"]
             },
             "strengths": hero["strengths"],
             "weaknesses": hero["weaknesses"]
