@@ -13,4 +13,5 @@ dependencies = [
     "psycopg2-binary>=2.9.10",
     "scikit-fuzzy>=0.5.0",
     "scipy>=1.15.2",
+    "sqlalchemy>=2.0.40",
 ]

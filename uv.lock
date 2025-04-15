@@ -337,6 +337,7 @@ dependencies = [
     { name = "psycopg2-binary" },
     { name = "scikit-fuzzy" },
     { name = "scipy" },
+    { name = "sqlalchemy" },
 ]
 
 [package.metadata]
@@ -350,6 +351,7 @@ requires-dist = [
     { name = "psycopg2-binary", specifier = ">=2.9.10" },
     { name = "scikit-fuzzy", specifier = ">=0.5.0" },
     { name = "scipy", specifier = ">=1.15.2" },
+    { name = "sqlalchemy", specifier = ">=2.0.40" },
 ]
 
 [[package]]
