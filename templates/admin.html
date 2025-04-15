@@ -523,10 +523,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (key === 'strengths' || key === 'weaknesses') {
                     // Split by newline and filter out empty lines
                     heroData[key] = value.split('\n').filter(line => line.trim() !== '');
-                } else if (['damage', 'durability', 'crowd_control', 'mobility', 'difficulty', 'win_rate', 'max_drawdown', 'max_consecutive_loss'].includes(key)) {
+                } else if ([
+                    'damage', 'durability', 'crowd_control', 'mobility', 'difficulty',
+                    'defense_overall', 'offense_overall', 'skill_effect_overall', 'difficulty_overall',
+                    'movement_spd', 'magic_defense', 'mana', 'hp_regen', 'physical_atk', 
+                    'physical_defense', 'hp', 'attack_speed', 'mana_regen',
+                    'win_rate', 'pick_rate', 'ban_rate', 'max_drawdown', 'max_consecutive_loss'
+                ].includes(key)) {
                     // Convert numeric values to numbers
                     heroData[key] = parseInt(value, 10);
-                } else if (key === 'profit_factor') {
+                } else if (['profit_factor'].includes(key)) {
                     // Convert to float
                     heroData[key] = parseFloat(value);
                 } else {
@@ -574,22 +580,54 @@ document.addEventListener('DOMContentLoaded', function() {
                 document.getElementById('edit_role').value = hero.role;
                 document.getElementById('edit_description').value = hero.description || '';
                 
-                // Set attributes
+                // Set basic attributes
                 document.getElementById('edit_damage').value = hero.damage;
                 document.getElementById('edit_durability').value = hero.durability;
                 document.getElementById('edit_crowd_control').value = hero.crowd_control;
                 document.getElementById('edit_mobility').value = hero.mobility;
                 document.getElementById('edit_difficulty').value = hero.difficulty;
                 
-                // Update value displays
+                // Update basic attribute value displays
                 document.getElementById('edit_damageValue').textContent = hero.damage;
                 document.getElementById('edit_durabilityValue').textContent = hero.durability;
                 document.getElementById('edit_crowdControlValue').textContent = hero.crowd_control;
                 document.getElementById('edit_mobilityValue').textContent = hero.mobility;
                 document.getElementById('edit_difficultyValue').textContent = hero.difficulty;
                 
+                // Set additional attributes if they exist
+                if (hero.defense_overall !== undefined) document.getElementById('edit_defense_overall').value = hero.defense_overall;
+                if (hero.offense_overall !== undefined) document.getElementById('edit_offense_overall').value = hero.offense_overall;
+                if (hero.skill_effect_overall !== undefined) document.getElementById('edit_skill_effect_overall').value = hero.skill_effect_overall;
+                if (hero.difficulty_overall !== undefined) document.getElementById('edit_difficulty_overall').value = hero.difficulty_overall;
+                if (hero.movement_spd !== undefined) document.getElementById('edit_movement_spd').value = hero.movement_spd;
+                if (hero.magic_defense !== undefined) document.getElementById('edit_magic_defense').value = hero.magic_defense;
+                if (hero.mana !== undefined) document.getElementById('edit_mana').value = hero.mana;
+                if (hero.hp_regen !== undefined) document.getElementById('edit_hp_regen').value = hero.hp_regen;
+                if (hero.physical_atk !== undefined) document.getElementById('edit_physical_atk').value = hero.physical_atk;
+                if (hero.physical_defense !== undefined) document.getElementById('edit_physical_defense').value = hero.physical_defense;
+                if (hero.hp !== undefined) document.getElementById('edit_hp').value = hero.hp;
+                if (hero.attack_speed !== undefined) document.getElementById('edit_attack_speed').value = hero.attack_speed;
+                if (hero.mana_regen !== undefined) document.getElementById('edit_mana_regen').value = hero.mana_regen;
+                
+                // Update additional attribute value displays
+                if (hero.defense_overall !== undefined) document.getElementById('edit_defenseOverallValue').textContent = hero.defense_overall;
+                if (hero.offense_overall !== undefined) document.getElementById('edit_offenseOverallValue').textContent = hero.offense_overall;
+                if (hero.skill_effect_overall !== undefined) document.getElementById('edit_skillEffectOverallValue').textContent = hero.skill_effect_overall;
+                if (hero.difficulty_overall !== undefined) document.getElementById('edit_difficultyOverallValue').textContent = hero.difficulty_overall;
+                if (hero.movement_spd !== undefined) document.getElementById('edit_movementSpdValue').textContent = hero.movement_spd;
+                if (hero.magic_defense !== undefined) document.getElementById('edit_magicDefenseValue').textContent = hero.magic_defense;
+                if (hero.mana !== undefined) document.getElementById('edit_manaValue').textContent = hero.mana;
+                if (hero.hp_regen !== undefined) document.getElementById('edit_hpRegenValue').textContent = hero.hp_regen;
+                if (hero.physical_atk !== undefined) document.getElementById('edit_physicalAtkValue').textContent = hero.physical_atk;
+                if (hero.physical_defense !== undefined) document.getElementById('edit_physicalDefenseValue').textContent = hero.physical_defense;
+                if (hero.hp !== undefined) document.getElementById('edit_hpValue').textContent = hero.hp;
+                if (hero.attack_speed !== undefined) document.getElementById('edit_attackSpeedValue').textContent = hero.attack_speed;
+                if (hero.mana_regen !== undefined) document.getElementById('edit_manaRegenValue').textContent = hero.mana_regen;
+                
                 // Set statistics
                 document.getElementById('edit_win_rate').value = hero.win_rate;
+                if (hero.pick_rate !== undefined) document.getElementById('edit_pick_rate').value = hero.pick_rate;
+                if (hero.ban_rate !== undefined) document.getElementById('edit_ban_rate').value = hero.ban_rate;
                 document.getElementById('edit_profit_factor').value = hero.profit_factor;
                 document.getElementById('edit_max_drawdown').value = hero.max_drawdown;
                 document.getElementById('edit_max_consecutive_loss').value = hero.max_consecutive_loss;
@@ -628,10 +666,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (key === 'strengths' || key === 'weaknesses') {
                     // Split by newline and filter out empty lines
                     heroData[key] = value.split('\n').filter(line => line.trim() !== '');
-                } else if (['damage', 'durability', 'crowd_control', 'mobility', 'difficulty', 'win_rate', 'max_drawdown', 'max_consecutive_loss'].includes(key)) {
+                } else if ([
+                    'damage', 'durability', 'crowd_control', 'mobility', 'difficulty',
+                    'defense_overall', 'offense_overall', 'skill_effect_overall', 'difficulty_overall',
+                    'movement_spd', 'magic_defense', 'mana', 'hp_regen', 'physical_atk', 
+                    'physical_defense', 'hp', 'attack_speed', 'mana_regen',
+                    'win_rate', 'pick_rate', 'ban_rate', 'max_drawdown', 'max_consecutive_loss'
+                ].includes(key)) {
                     // Convert numeric values to numbers
                     heroData[key] = parseInt(value, 10);
-                } else if (key === 'profit_factor') {
+                } else if (['profit_factor'].includes(key)) {
                     // Convert to float
                     heroData[key] = parseFloat(value);
                 } else {

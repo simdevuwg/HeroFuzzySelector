@@ -140,15 +140,32 @@ class UserPreference(db.Model):
     user_id = db.Column(db.String(100), nullable=True)  # Optional, for future user authentication
     role = db.Column(db.String(50), nullable=True)
     
-    # Attribute preferences
+    # Basic attribute preferences
     damage = db.Column(db.Integer, nullable=False, default=5)
     durability = db.Column(db.Integer, nullable=False, default=5)
     crowd_control = db.Column(db.Integer, nullable=False, default=5)
     mobility = db.Column(db.Integer, nullable=False, default=5)
     difficulty = db.Column(db.Integer, nullable=False, default=5)
     
+    # Additional attribute preferences
+    defense_overall_importance = db.Column(db.Integer, nullable=False, default=5)
+    offense_overall_importance = db.Column(db.Integer, nullable=False, default=5)
+    skill_effect_overall_importance = db.Column(db.Integer, nullable=False, default=5)
+    difficulty_overall_importance = db.Column(db.Integer, nullable=False, default=5)
+    movement_spd_importance = db.Column(db.Integer, nullable=False, default=5)
+    magic_defense_importance = db.Column(db.Integer, nullable=False, default=5)
+    mana_importance = db.Column(db.Integer, nullable=False, default=5)
+    hp_regen_importance = db.Column(db.Integer, nullable=False, default=5)
+    physical_atk_importance = db.Column(db.Integer, nullable=False, default=5)
+    physical_defense_importance = db.Column(db.Integer, nullable=False, default=5)
+    hp_importance = db.Column(db.Integer, nullable=False, default=5)
+    attack_speed_importance = db.Column(db.Integer, nullable=False, default=5)
+    mana_regen_importance = db.Column(db.Integer, nullable=False, default=5)
+    
     # Statistic preferences
     win_rate_importance = db.Column(db.Integer, nullable=False, default=5)
+    pick_rate_importance = db.Column(db.Integer, nullable=False, default=5)
+    ban_rate_importance = db.Column(db.Integer, nullable=False, default=5)
     profit_factor_importance = db.Column(db.Integer, nullable=False, default=5)
     max_drawdown_importance = db.Column(db.Integer, nullable=False, default=5)
     max_consecutive_loss_importance = db.Column(db.Integer, nullable=False, default=5)
@@ -164,14 +181,37 @@ class UserPreference(db.Model):
         return {
             'id': self.id,
             'role': self.role,
+            
+            # Basic attribute preferences
             'damage': self.damage,
             'durability': self.durability,
             'crowd_control': self.crowd_control,
             'mobility': self.mobility,
             'difficulty': self.difficulty,
+            
+            # Additional attribute preferences
+            'defense_overall_importance': self.defense_overall_importance,
+            'offense_overall_importance': self.offense_overall_importance,
+            'skill_effect_overall_importance': self.skill_effect_overall_importance,
+            'difficulty_overall_importance': self.difficulty_overall_importance,
+            'movement_spd_importance': self.movement_spd_importance,
+            'magic_defense_importance': self.magic_defense_importance,
+            'mana_importance': self.mana_importance,
+            'hp_regen_importance': self.hp_regen_importance,
+            'physical_atk_importance': self.physical_atk_importance,
+            'physical_defense_importance': self.physical_defense_importance,
+            'hp_importance': self.hp_importance,
+            'attack_speed_importance': self.attack_speed_importance,
+            'mana_regen_importance': self.mana_regen_importance,
+            
+            # Statistic preferences
             'win_rate_importance': self.win_rate_importance,
+            'pick_rate_importance': self.pick_rate_importance,
+            'ban_rate_importance': self.ban_rate_importance,
             'profit_factor_importance': self.profit_factor_importance,
             'max_drawdown_importance': self.max_drawdown_importance,
             'max_consecutive_loss_importance': self.max_consecutive_loss_importance,
+            
+            # Metadata
             'created_at': self.created_at.isoformat() if self.created_at else None
         }

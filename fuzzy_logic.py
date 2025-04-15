@@ -17,8 +17,20 @@ def create_fuzzy_system():
     mobility = ctrl.Antecedent(np.arange(0, 11, 1), 'mobility')
     difficulty = ctrl.Antecedent(np.arange(0, 11, 1), 'difficulty')
     
+    # Input variables (additional attributes)
+    defense_overall = ctrl.Antecedent(np.arange(0, 11, 1), 'defense_overall')
+    offense_overall = ctrl.Antecedent(np.arange(0, 11, 1), 'offense_overall')
+    skill_effect_overall = ctrl.Antecedent(np.arange(0, 11, 1), 'skill_effect_overall')
+    difficulty_overall = ctrl.Antecedent(np.arange(0, 11, 1), 'difficulty_overall')
+    movement_spd = ctrl.Antecedent(np.arange(0, 11, 1), 'movement_spd')
+    magic_defense = ctrl.Antecedent(np.arange(0, 11, 1), 'magic_defense')
+    physical_atk = ctrl.Antecedent(np.arange(0, 11, 1), 'physical_atk')
+    physical_defense = ctrl.Antecedent(np.arange(0, 11, 1), 'physical_defense')
+    
     # Input variables (statistical attributes)
     win_rate = ctrl.Antecedent(np.arange(40, 61, 1), 'win_rate')
+    pick_rate = ctrl.Antecedent(np.arange(0, 21, 1), 'pick_rate')
+    ban_rate = ctrl.Antecedent(np.arange(0, 21, 1), 'ban_rate')
     profit_factor = ctrl.Antecedent(np.arange(0.5, 2.1, 0.1), 'profit_factor')
     max_drawdown = ctrl.Antecedent(np.arange(0, 51, 1), 'max_drawdown')
     max_consecutive_loss = ctrl.Antecedent(np.arange(0, 11, 1), 'max_consecutive_loss')
@@ -32,6 +44,16 @@ def create_fuzzy_system():
     crowd_control.automf(3, names=['low', 'medium', 'high'])
     mobility.automf(3, names=['low', 'medium', 'high'])
     difficulty.automf(3, names=['easy', 'medium', 'hard'])
+    
+    # Auto-generate fuzzy membership functions for additional attributes
+    defense_overall.automf(3, names=['low', 'medium', 'high'])
+    offense_overall.automf(3, names=['low', 'medium', 'high'])
+    skill_effect_overall.automf(3, names=['weak', 'medium', 'strong'])
+    difficulty_overall.automf(3, names=['easy', 'medium', 'hard'])
+    movement_spd.automf(3, names=['slow', 'medium', 'fast'])
+    magic_defense.automf(3, names=['low', 'medium', 'high'])
+    physical_atk.automf(3, names=['low', 'medium', 'high'])
+    physical_defense.automf(3, names=['low', 'medium', 'high'])
     
     # Define membership functions for statistical attributes
     win_rate['low'] = fuzz.trimf(win_rate.universe, [40, 45, 50])
