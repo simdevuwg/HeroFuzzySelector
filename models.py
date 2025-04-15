@@ -20,8 +20,25 @@ class Hero(db.Model):
     mobility = db.Column(db.Integer, nullable=False, default=5)
     difficulty = db.Column(db.Integer, nullable=False, default=5)
     
+    # Additional attributes
+    defense_overall = db.Column(db.Integer, nullable=False, default=5)
+    offense_overall = db.Column(db.Integer, nullable=False, default=5)
+    skill_effect_overall = db.Column(db.Integer, nullable=False, default=5)
+    difficulty_overall = db.Column(db.Integer, nullable=False, default=5)
+    movement_spd = db.Column(db.Integer, nullable=False, default=5)
+    magic_defense = db.Column(db.Integer, nullable=False, default=5)
+    mana = db.Column(db.Integer, nullable=False, default=5)
+    hp_regen = db.Column(db.Integer, nullable=False, default=5)
+    physical_atk = db.Column(db.Integer, nullable=False, default=5)
+    physical_defense = db.Column(db.Integer, nullable=False, default=5)
+    hp = db.Column(db.Integer, nullable=False, default=5)
+    attack_speed = db.Column(db.Integer, nullable=False, default=5)
+    mana_regen = db.Column(db.Integer, nullable=False, default=5)
+    
     # Performance statistics
     win_rate = db.Column(db.Float, nullable=False, default=50.0)
+    pick_rate = db.Column(db.Float, nullable=False, default=5.0)
+    ban_rate = db.Column(db.Float, nullable=False, default=1.0)
     profit_factor = db.Column(db.Float, nullable=False, default=1.0)
     max_drawdown = db.Column(db.Float, nullable=False, default=20.0)
     max_consecutive_loss = db.Column(db.Integer, nullable=False, default=3)
@@ -44,17 +61,42 @@ class Hero(db.Model):
             'name': self.name,
             'role': self.role,
             'description': self.description,
+            
+            # Basic attributes
             'damage': self.damage,
             'durability': self.durability,
             'crowd_control': self.crowd_control,
             'mobility': self.mobility,
             'difficulty': self.difficulty,
+            
+            # Additional attributes
+            'defense_overall': self.defense_overall,
+            'offense_overall': self.offense_overall,
+            'skill_effect_overall': self.skill_effect_overall,
+            'difficulty_overall': self.difficulty_overall,
+            'movement_spd': self.movement_spd,
+            'magic_defense': self.magic_defense,
+            'mana': self.mana,
+            'hp_regen': self.hp_regen,
+            'physical_atk': self.physical_atk,
+            'physical_defense': self.physical_defense,
+            'hp': self.hp,
+            'attack_speed': self.attack_speed,
+            'mana_regen': self.mana_regen,
+            
+            # Performance statistics
             'win_rate': self.win_rate,
+            'pick_rate': self.pick_rate,
+            'ban_rate': self.ban_rate,
             'profit_factor': self.profit_factor,
             'max_drawdown': self.max_drawdown,
             'max_consecutive_loss': self.max_consecutive_loss,
+            
+            # Relationships
             'strengths': [s.text for s in self.strengths],
             'weaknesses': [w.text for w in self.weaknesses],
+            
+            # Metadata
             'created_at': self.created_at.isoformat() if self.created_at else None,
             'updated_at': self.updated_at.isoformat() if self.updated_at else None
         }

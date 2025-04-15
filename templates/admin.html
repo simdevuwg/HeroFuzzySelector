@@ -60,6 +60,8 @@
                                 </td>
                                 <td>
                                     <small>WR: {{ hero.win_rate }}%</small>,
+                                    <small>PR: {{ hero.pick_rate }}%</small>,
+                                    <small>BR: {{ hero.ban_rate }}%</small>,
                                     <small>PF: {{ hero.profit_factor }}</small>,
                                     <small>DD: {{ hero.max_drawdown }}%</small>,
                                     <small>CL: {{ hero.max_consecutive_loss }}</small>
@@ -152,20 +154,97 @@
                     </div>
                     
                     <div class="row mb-3">
+                        <h5>Additional Attributes</h5>
+                        <div class="col-md-4 mb-2">
+                            <label for="defense_overall" class="form-label">Defense Overall (1-10)</label>
+                            <input type="range" class="form-range" id="defense_overall" name="defense_overall" min="1" max="10" value="5">
+                            <div class="text-center" id="defenseOverallValue">5</div>
+                        </div>
+                        <div class="col-md-4 mb-2">
+                            <label for="offense_overall" class="form-label">Offense Overall (1-10)</label>
+                            <input type="range" class="form-range" id="offense_overall" name="offense_overall" min="1" max="10" value="5">
+                            <div class="text-center" id="offenseOverallValue">5</div>
+                        </div>
+                        <div class="col-md-4 mb-2">
+                            <label for="skill_effect_overall" class="form-label">Skill Effect Overall (1-10)</label>
+                            <input type="range" class="form-range" id="skill_effect_overall" name="skill_effect_overall" min="1" max="10" value="5">
+                            <div class="text-center" id="skillEffectOverallValue">5</div>
+                        </div>
+                        <div class="col-md-4 mb-2">
+                            <label for="difficulty_overall" class="form-label">Difficulty Overall (1-10)</label>
+                            <input type="range" class="form-range" id="difficulty_overall" name="difficulty_overall" min="1" max="10" value="5">
+                            <div class="text-center" id="difficultyOverallValue">5</div>
+                        </div>
+                        <div class="col-md-4 mb-2">
+                            <label for="movement_spd" class="form-label">Movement Speed (1-10)</label>
+                            <input type="range" class="form-range" id="movement_spd" name="movement_spd" min="1" max="10" value="5">
+                            <div class="text-center" id="movementSpdValue">5</div>
+                        </div>
+                        <div class="col-md-4 mb-2">
+                            <label for="magic_defense" class="form-label">Magic Defense (1-10)</label>
+                            <input type="range" class="form-range" id="magic_defense" name="magic_defense" min="1" max="10" value="5">
+                            <div class="text-center" id="magicDefenseValue">5</div>
+                        </div>
+                        <div class="col-md-4 mb-2">
+                            <label for="mana" class="form-label">Mana (1-10)</label>
+                            <input type="range" class="form-range" id="mana" name="mana" min="1" max="10" value="5">
+                            <div class="text-center" id="manaValue">5</div>
+                        </div>
+                        <div class="col-md-4 mb-2">
+                            <label for="hp_regen" class="form-label">HP Regen (1-10)</label>
+                            <input type="range" class="form-range" id="hp_regen" name="hp_regen" min="1" max="10" value="5">
+                            <div class="text-center" id="hpRegenValue">5</div>
+                        </div>
+                        <div class="col-md-4 mb-2">
+                            <label for="physical_atk" class="form-label">Physical Attack (1-10)</label>
+                            <input type="range" class="form-range" id="physical_atk" name="physical_atk" min="1" max="10" value="5">
+                            <div class="text-center" id="physicalAtkValue">5</div>
+                        </div>
+                        <div class="col-md-4 mb-2">
+                            <label for="physical_defense" class="form-label">Physical Defense (1-10)</label>
+                            <input type="range" class="form-range" id="physical_defense" name="physical_defense" min="1" max="10" value="5">
+                            <div class="text-center" id="physicalDefenseValue">5</div>
+                        </div>
+                        <div class="col-md-4 mb-2">
+                            <label for="hp" class="form-label">HP (1-10)</label>
+                            <input type="range" class="form-range" id="hp" name="hp" min="1" max="10" value="5">
+                            <div class="text-center" id="hpValue">5</div>
+                        </div>
+                        <div class="col-md-4 mb-2">
+                            <label for="attack_speed" class="form-label">Attack Speed (1-10)</label>
+                            <input type="range" class="form-range" id="attack_speed" name="attack_speed" min="1" max="10" value="5">
+                            <div class="text-center" id="attackSpeedValue">5</div>
+                        </div>
+                        <div class="col-md-4 mb-2">
+                            <label for="mana_regen" class="form-label">Mana Regen (1-10)</label>
+                            <input type="range" class="form-range" id="mana_regen" name="mana_regen" min="1" max="10" value="5">
+                            <div class="text-center" id="manaRegenValue">5</div>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
                         <h5>Performance Statistics</h5>
-                        <div class="col-md-6 mb-2">
+                        <div class="col-md-4 mb-2">
                             <label for="win_rate" class="form-label">Win Rate (%)</label>
                             <input type="number" class="form-control" id="win_rate" name="win_rate" min="0" max="100" value="50">
                         </div>
-                        <div class="col-md-6 mb-2">
+                        <div class="col-md-4 mb-2">
+                            <label for="pick_rate" class="form-label">Pick Rate (%)</label>
+                            <input type="number" class="form-control" id="pick_rate" name="pick_rate" min="0" max="100" value="5">
+                        </div>
+                        <div class="col-md-4 mb-2">
+                            <label for="ban_rate" class="form-label">Ban Rate (%)</label>
+                            <input type="number" class="form-control" id="ban_rate" name="ban_rate" min="0" max="100" value="1">
+                        </div>
+                        <div class="col-md-4 mb-2">
                             <label for="profit_factor" class="form-label">Profit Factor</label>
                             <input type="number" class="form-control" id="profit_factor" name="profit_factor" min="0" step="0.1" value="1.0">
                         </div>
-                        <div class="col-md-6 mb-2">
+                        <div class="col-md-4 mb-2">
                             <label for="max_drawdown" class="form-label">Max Drawdown (%)</label>
                             <input type="number" class="form-control" id="max_drawdown" name="max_drawdown" min="0" max="100" value="20">
                         </div>
-                        <div class="col-md-6 mb-2">
+                        <div class="col-md-4 mb-2">
                             <label for="max_consecutive_loss" class="form-label">Max Consecutive Loss</label>
                             <input type="number" class="form-control" id="max_consecutive_loss" name="max_consecutive_loss" min="0" value="3">
                         </div>
@@ -262,20 +341,97 @@
                     </div>
                     
                     <div class="row mb-3">
+                        <h5>Additional Attributes</h5>
+                        <div class="col-md-4 mb-2">
+                            <label for="edit_defense_overall" class="form-label">Defense Overall (1-10)</label>
+                            <input type="range" class="form-range" id="edit_defense_overall" name="defense_overall" min="1" max="10" value="5">
+                            <div class="text-center" id="edit_defenseOverallValue">5</div>
+                        </div>
+                        <div class="col-md-4 mb-2">
+                            <label for="edit_offense_overall" class="form-label">Offense Overall (1-10)</label>
+                            <input type="range" class="form-range" id="edit_offense_overall" name="offense_overall" min="1" max="10" value="5">
+                            <div class="text-center" id="edit_offenseOverallValue">5</div>
+                        </div>
+                        <div class="col-md-4 mb-2">
+                            <label for="edit_skill_effect_overall" class="form-label">Skill Effect Overall (1-10)</label>
+                            <input type="range" class="form-range" id="edit_skill_effect_overall" name="skill_effect_overall" min="1" max="10" value="5">
+                            <div class="text-center" id="edit_skillEffectOverallValue">5</div>
+                        </div>
+                        <div class="col-md-4 mb-2">
+                            <label for="edit_difficulty_overall" class="form-label">Difficulty Overall (1-10)</label>
+                            <input type="range" class="form-range" id="edit_difficulty_overall" name="difficulty_overall" min="1" max="10" value="5">
+                            <div class="text-center" id="edit_difficultyOverallValue">5</div>
+                        </div>
+                        <div class="col-md-4 mb-2">
+                            <label for="edit_movement_spd" class="form-label">Movement Speed (1-10)</label>
+                            <input type="range" class="form-range" id="edit_movement_spd" name="movement_spd" min="1" max="10" value="5">
+                            <div class="text-center" id="edit_movementSpdValue">5</div>
+                        </div>
+                        <div class="col-md-4 mb-2">
+                            <label for="edit_magic_defense" class="form-label">Magic Defense (1-10)</label>
+                            <input type="range" class="form-range" id="edit_magic_defense" name="magic_defense" min="1" max="10" value="5">
+                            <div class="text-center" id="edit_magicDefenseValue">5</div>
+                        </div>
+                        <div class="col-md-4 mb-2">
+                            <label for="edit_mana" class="form-label">Mana (1-10)</label>
+                            <input type="range" class="form-range" id="edit_mana" name="mana" min="1" max="10" value="5">
+                            <div class="text-center" id="edit_manaValue">5</div>
+                        </div>
+                        <div class="col-md-4 mb-2">
+                            <label for="edit_hp_regen" class="form-label">HP Regen (1-10)</label>
+                            <input type="range" class="form-range" id="edit_hp_regen" name="hp_regen" min="1" max="10" value="5">
+                            <div class="text-center" id="edit_hpRegenValue">5</div>
+                        </div>
+                        <div class="col-md-4 mb-2">
+                            <label for="edit_physical_atk" class="form-label">Physical Attack (1-10)</label>
+                            <input type="range" class="form-range" id="edit_physical_atk" name="physical_atk" min="1" max="10" value="5">
+                            <div class="text-center" id="edit_physicalAtkValue">5</div>
+                        </div>
+                        <div class="col-md-4 mb-2">
+                            <label for="edit_physical_defense" class="form-label">Physical Defense (1-10)</label>
+                            <input type="range" class="form-range" id="edit_physical_defense" name="physical_defense" min="1" max="10" value="5">
+                            <div class="text-center" id="edit_physicalDefenseValue">5</div>
+                        </div>
+                        <div class="col-md-4 mb-2">
+                            <label for="edit_hp" class="form-label">HP (1-10)</label>
+                            <input type="range" class="form-range" id="edit_hp" name="hp" min="1" max="10" value="5">
+                            <div class="text-center" id="edit_hpValue">5</div>
+                        </div>
+                        <div class="col-md-4 mb-2">
+                            <label for="edit_attack_speed" class="form-label">Attack Speed (1-10)</label>
+                            <input type="range" class="form-range" id="edit_attack_speed" name="attack_speed" min="1" max="10" value="5">
+                            <div class="text-center" id="edit_attackSpeedValue">5</div>
+                        </div>
+                        <div class="col-md-4 mb-2">
+                            <label for="edit_mana_regen" class="form-label">Mana Regen (1-10)</label>
+                            <input type="range" class="form-range" id="edit_mana_regen" name="mana_regen" min="1" max="10" value="5">
+                            <div class="text-center" id="edit_manaRegenValue">5</div>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
                         <h5>Performance Statistics</h5>
-                        <div class="col-md-6 mb-2">
+                        <div class="col-md-4 mb-2">
                             <label for="edit_win_rate" class="form-label">Win Rate (%)</label>
                             <input type="number" class="form-control" id="edit_win_rate" name="win_rate" min="0" max="100" value="50">
                         </div>
-                        <div class="col-md-6 mb-2">
+                        <div class="col-md-4 mb-2">
+                            <label for="edit_pick_rate" class="form-label">Pick Rate (%)</label>
+                            <input type="number" class="form-control" id="edit_pick_rate" name="pick_rate" min="0" max="100" value="5">
+                        </div>
+                        <div class="col-md-4 mb-2">
+                            <label for="edit_ban_rate" class="form-label">Ban Rate (%)</label>
+                            <input type="number" class="form-control" id="edit_ban_rate" name="ban_rate" min="0" max="100" value="1">
+                        </div>
+                        <div class="col-md-4 mb-2">
                             <label for="edit_profit_factor" class="form-label">Profit Factor</label>
                             <input type="number" class="form-control" id="edit_profit_factor" name="profit_factor" min="0" step="0.1" value="1.0">
                         </div>
-                        <div class="col-md-6 mb-2">
+                        <div class="col-md-4 mb-2">
                             <label for="edit_max_drawdown" class="form-label">Max Drawdown (%)</label>
                             <input type="number" class="form-control" id="edit_max_drawdown" name="max_drawdown" min="0" max="100" value="20">
                         </div>
-                        <div class="col-md-6 mb-2">
+                        <div class="col-md-4 mb-2">
                             <label for="edit_max_consecutive_loss" class="form-label">Max Consecutive Loss</label>
                             <input type="number" class="form-control" id="edit_max_consecutive_loss" name="max_consecutive_loss" min="0" value="3">
                         </div>
