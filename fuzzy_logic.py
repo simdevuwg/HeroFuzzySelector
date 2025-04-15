@@ -118,15 +118,25 @@ def create_fuzzy_system():
     rule26 = ctrl.Rule(difficulty['easy'] & mobility['high'], suitability['high'])
     rule27 = ctrl.Rule(difficulty['medium'] & durability['medium'] & crowd_control['medium'], suitability['medium'])
     
+    # Define rules for additional attributes
+    rule28 = ctrl.Rule(defense_overall['high'] & physical_defense['high'], suitability['high'])
+    rule29 = ctrl.Rule(offense_overall['high'] & physical_atk['high'], suitability['high'])
+    rule30 = ctrl.Rule(skill_effect_overall['strong'], suitability['high'])
+    rule31 = ctrl.Rule(movement_spd['fast'] & mobility['high'], suitability['high'])
+    rule32 = ctrl.Rule(magic_defense['high'] & physical_defense['high'], suitability['high'])
+    rule33 = ctrl.Rule(defense_overall['low'] & physical_defense['low'], suitability['low'])
+    rule34 = ctrl.Rule(offense_overall['low'] & physical_atk['low'], suitability['low'])
+    rule35 = ctrl.Rule(movement_spd['slow'] & mobility['low'], suitability['low'])
+    
     # Define rules for statistical factors
-    rule28 = ctrl.Rule(win_rate['high'] & profit_factor['good'], suitability['high'])
-    rule29 = ctrl.Rule(win_rate['high'] & max_drawdown['small'], suitability['high'])
-    rule30 = ctrl.Rule(win_rate['medium'] & profit_factor['average'], suitability['medium'])
-    rule31 = ctrl.Rule(win_rate['low'] & max_drawdown['large'], suitability['low'])
-    rule32 = ctrl.Rule(profit_factor['good'] & max_consecutive_loss['few'], suitability['high'])
-    rule33 = ctrl.Rule(profit_factor['poor'] & max_consecutive_loss['many'], suitability['low'])
-    rule34 = ctrl.Rule(max_drawdown['small'] & max_consecutive_loss['few'], suitability['high'])
-    rule35 = ctrl.Rule(max_drawdown['large'] & max_consecutive_loss['many'], suitability['low'])
+    rule36 = ctrl.Rule(win_rate['high'] & profit_factor['good'], suitability['high'])
+    rule37 = ctrl.Rule(win_rate['high'] & max_drawdown['small'], suitability['high'])
+    rule38 = ctrl.Rule(win_rate['medium'] & profit_factor['average'], suitability['medium'])
+    rule39 = ctrl.Rule(win_rate['low'] & max_drawdown['large'], suitability['low'])
+    rule40 = ctrl.Rule(profit_factor['good'] & max_consecutive_loss['few'], suitability['high'])
+    rule41 = ctrl.Rule(profit_factor['poor'] & max_consecutive_loss['many'], suitability['low'])
+    rule42 = ctrl.Rule(max_drawdown['small'] & max_consecutive_loss['few'], suitability['high'])
+    rule43 = ctrl.Rule(max_drawdown['large'] & max_consecutive_loss['many'], suitability['low'])
     
     # Create control system
     hero_ctrl = ctrl.ControlSystem([
